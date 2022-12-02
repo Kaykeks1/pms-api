@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Project" ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "priority" DROP NOT NULL,
+ALTER COLUMN "effort" DROP NOT NULL,
+ALTER COLUMN "status" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Task" ALTER COLUMN "due_date" DROP NOT NULL;
