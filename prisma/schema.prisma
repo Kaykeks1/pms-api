@@ -28,6 +28,8 @@ model Organization {
   // userOrganization UserOrganization?
   users User[]
   name String
+  teamMembers TeamMember[]
+  projects Project[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -54,6 +56,8 @@ model TeamMember {
   role Role
   // task TaskTeamMember[]
   tasks Task[]
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -89,6 +93,8 @@ model Project {
   status Status?
   task Task[]
   deadline DateTime?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId Int?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
