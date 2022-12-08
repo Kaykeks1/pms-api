@@ -21,11 +21,16 @@ export class AuthService {
                 data: {
                     email: dto.email,
                     hash,
+                    organizations: { create: [{ name: dto.name }] }
                 },
             });
             delete user.hash
             // return user
-            return this.signToken(user.id, user.email  )
+            const { access_token } = await this.signToken(user.id, user.email)
+            return {
+                token: access_token,
+                user,
+            }
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
