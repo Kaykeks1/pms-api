@@ -6,6 +6,10 @@ export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
     title: string;
+    
+    @IsNumberString()
+    @IsNotEmpty()
+    organization: number;
 }
 
 export class UpdateProjectDto {
@@ -30,5 +34,13 @@ export class UpdateProjectDto {
 
 export class ProjectIdParams {
     @IsNumberString()
-    project_id: number
+    organization_id: number;
+
+    @IsNumberString()
+    project_id: number;
+}
+
+export class OrganizationIdParams {
+    @IsNumberString()
+    organization_id: number
 }

@@ -7,12 +7,13 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 @Injectable({})
 export class ProjectService {
     constructor (private prisma: PrismaService) {}
-    async create(dto: CreateProjectDto) {
+    async create(organization_id: number, dto: CreateProjectDto) {
         const { title } = dto;
         try {
             const project = await this.prisma.project.create({
                 data: {
                     title,
+                    organizationId: Number(organization_id),
                 },
             });
             return project
@@ -25,7 +26,7 @@ export class ProjectService {
         try {
             const updatedProject = await this.prisma.project.update({
                 where: {
-                    id: Number(project_id)
+                    id: Number(project_id),
                 },
                 data: {
                     title,
