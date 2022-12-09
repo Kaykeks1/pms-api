@@ -22,7 +22,8 @@ export class ProjectService {
         }
     }
     async edit(project_id: number, dto: UpdateProjectDto) {
-        const { title, description, priority, effort, status, deadline } = dto;
+        const { title, description, priority, effort, status, deadline, tasks } = dto;
+
         try {
             const updatedProject = await this.prisma.project.update({
                 where: {
@@ -34,7 +35,8 @@ export class ProjectService {
                     priority,
                     effort,
                     status,
-                    deadline
+                    deadline,
+                    tasks: { create: tasks }
                 }
             })
             return updatedProject

@@ -56,8 +56,8 @@ model TeamMember {
   role Role
   // task TaskTeamMember[]
   tasks Task[]
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId Int?  @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -91,10 +91,10 @@ model Project {
   priority Priority?
   effort Effort?
   status Status?
-  task Task[]
+  tasks Task[]
   deadline DateTime?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId Int?  @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -107,7 +107,7 @@ model Task {
   // teamMembers TaskTeamMember[]
   teamMembers TeamMember[]
   project Project @relation(fields: [projectId], references: [id])
-  projectId Int  @unique
+  projectId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
