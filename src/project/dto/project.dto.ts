@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsDate, IsNumberString, IsEnum } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, IsDate, IsNumberString, IsEnum, IsArray } from "class-validator";
 // import { PrismaClient } from '@prisma/client';
 import { Priority, Effort, Status } from '@prisma/client';
 
@@ -30,6 +30,9 @@ export class UpdateProjectDto {
 
     @IsDate()
     deadline?: string;
+
+    @IsArray()
+    tasks: any;
 }
 
 export class ProjectIdParams {

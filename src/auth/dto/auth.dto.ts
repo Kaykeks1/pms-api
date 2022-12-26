@@ -6,11 +6,15 @@ export class AuthDto {
     email: string;
 
     @IsString()
-    @IsString()
     @IsNotEmpty()
     password: string;
 
     @IsString()
+    firstName: string;
+
+    @IsString()
+    lastName: string;
+
     @IsString()
     name: string;
 }

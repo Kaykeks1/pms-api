@@ -19,6 +19,8 @@ export class AuthService {
             const hash = await argon.hash(dto.password);
             const user = await this.prisma.user.create({
                 data: {
+                    firstName: dto.firstName,
+                    lastName: dto.lastName,
                     email: dto.email,
                     hash,
                     organizations: { create: [{ name: dto.name }] }
@@ -27,9 +29,15 @@ export class AuthService {
             delete user.hash
             // return user
             const { access_token } = await this.signToken(user.id, user.email)
+            const userWithOrganization = await this.prisma.user.findUnique({
+                where: {
+                  id: user.id,
+                },
+                include: { organizations: true },
+            })
             return {
                 token: access_token,
-                user,
+                user: userWithOrganization,
             }
         } catch(error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -56,7 +64,17 @@ export class AuthService {
 
         delete user.hash
         // return user
-        return this.signToken(user.id, user.email  )
+        const { access_token } = await this.signToken(user.id, user.email)
+        const userWithOrganization = await this.prisma.user.findUnique({
+            where: {
+              id: user.id,
+            },
+            include: { organizations: true },
+        })
+        return {
+            token: access_token,
+            user: userWithOrganization,
+        }
     }
     async signToken (
         userId: number,
