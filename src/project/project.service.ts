@@ -45,4 +45,36 @@ export class ProjectService {
             throw error
         }
     }
+
+    async fetchOrganizationProjects (organization_id: number) {
+        try {
+            const projectsWithTasks = await this.prisma.project.findMany({
+                where: {
+                    organizationId: Number(organization_id),
+                },
+                include: { tasks: true },
+            })
+            return projectsWithTasks.map(i => {
+                const no_of_tasks = i.tasks.length;
+                delete i.tasks
+                return { ...i, no_of_tasks }
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getProject (project_id: number) {
+        try {
+            const projectWithTasks = await this.prisma.project.findUnique({
+                where: {
+                  id: Number(project_id),
+                },
+                include: { tasks: true },
+            })
+            return projectWithTasks
+        } catch (error) {
+            throw error
+        }
+    }
 } 
