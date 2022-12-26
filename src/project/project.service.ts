@@ -23,8 +23,24 @@ export class ProjectService {
     }
     async edit(project_id: number, dto: UpdateProjectDto) {
         const { title, description, priority, effort, status, deadline, tasks } = dto;
+        const tasksWithId = tasks.filter(i => i.id)
+        const tasksWithoutId = tasks.filter(i => !i.id)
 
         try {
+            if (tasksWithId.length) {
+                for (let item of tasksWithId) {
+                    await this.prisma.task.update({
+                        where: {
+                            id: Number(item.id),
+                        },
+                        data: {
+                            description: item.description,
+                            due_date: item.due_date,
+                            is_completed: item.is_completed
+                        }
+                    })
+                }
+            }
             const updatedProject = await this.prisma.project.update({
                 where: {
                     id: Number(project_id),
@@ -36,8 +52,9 @@ export class ProjectService {
                     effort,
                     status,
                     deadline,
-                    tasks: { create: tasks }
-                }
+                    tasks: { create: tasksWithoutId }
+                },
+                include: { tasks: true },
             })
             return updatedProject
 
