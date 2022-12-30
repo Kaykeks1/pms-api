@@ -13,6 +13,7 @@ export class ProjectService {
             const project = await this.prisma.project.create({
                 data: {
                     title,
+                    status: 'not_started',
                     organizationId: Number(organization_id),
                 },
             });
@@ -23,8 +24,8 @@ export class ProjectService {
     }
     async edit(project_id: number, dto: UpdateProjectDto) {
         const { title, description, priority, effort, status, deadline, tasks } = dto;
-        const tasksWithId = tasks.filter(i => i.id)
-        const tasksWithoutId = tasks.filter(i => !i.id)
+        const tasksWithId = tasks ? tasks.filter(i => i.id) : []
+        const tasksWithoutId = tasks ? tasks.filter(i => !i.id) : []
 
         try {
             if (tasksWithId.length) {
