@@ -12,7 +12,6 @@ export class ProjectController {
     @Post('create')
     async create (@Param() params: OrganizationIdParams, @Body() dto: CreateProjectDto) {
         const { organization_id } = params
-        console.log('herherhehre')
         return await this.projectService.create(organization_id, dto)
     }
 
