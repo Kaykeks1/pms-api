@@ -52,7 +52,8 @@ enum Role {
 
 model TeamMember {
   id     Int  @id @default(autoincrement())
-  name String
+  firstName String
+  lastName String
   role Role
   // task TaskTeamMember[]
   tasks Task[]
