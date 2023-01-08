@@ -11,12 +11,14 @@ import { ProjectModule } from './project/project.module';
 import { TeamService } from './team/team.service';
 import { TeamController } from './team/team.controller';
 import { TeamModule } from './team/team.module';
+import { TaskService } from './task/task.service';
+import { TaskModule } from './task/task.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, ProjectModule, TeamModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, ProjectModule, TeamModule, TaskModule],
   // controllers: [AppController],
   // providers: [AppService],
   controllers: [ProjectController, TeamController],
-  providers: [ProjectService, TeamService],
+  providers: [ProjectService, TeamService, TaskService],
 })
 export class AppModule {}
