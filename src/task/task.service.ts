@@ -20,4 +20,17 @@ export class TaskService {
             })
         }
     }
+    async fetchProjectTasks (project_id: number) {
+        try {
+            const tasksWithTeam = await this.prisma.task.findMany({
+                where: {
+                    projectId: Number(project_id),
+                },
+                include: { teamMembers: true },
+            })
+            return tasksWithTeam
+        } catch (error) {
+            throw error
+        }
+    }
 }
