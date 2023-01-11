@@ -6,18 +6,26 @@ import { UpdateTeamDto } from "./dto";
 export class TaskService {
     constructor (private prisma: PrismaService) {}
     async updateTeam (dto: UpdateTeamDto) {
-        const { tasksWithTeam } = dto
-        for (const item of tasksWithTeam) {
-            await this.prisma.task.update({
-                where: {
-                    id: Number(item.id),
-                },
-                data: {
-                    teamMembers: {
-                        set: item.team
-                    }
-                }
-            })
+        try {
+            const { tasksWithTeam } = dto
+            let res = []
+            for (const item of tasksWithTeam) {
+                const data = await this.prisma.task.update({
+                    where: {
+                        id: Number(item.id),
+                    },
+                    data: {
+                        teamMembers: {
+                            set: item.team
+                        }
+                    },
+                    include: { teamMembers: true }
+                })
+                res = [ ...res, data ]
+            }
+            return res
+        } catch (error) {
+            throw error
         }
     }
     async fetchProjectTasks (project_id: number) {
