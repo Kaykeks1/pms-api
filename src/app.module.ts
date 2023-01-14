@@ -13,12 +13,13 @@ import { TeamController } from './team/team.controller';
 import { TeamModule } from './team/team.module';
 import { TaskService } from './task/task.service';
 import { TaskModule } from './task/task.module';
+import { StatisticsService } from './statistics/statistics.service';
+import { StatisticsController } from './statistics/statistics.controller';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, ProjectModule, TeamModule, TaskModule],
-  // controllers: [AppController],
-  // providers: [AppService],
-  controllers: [ProjectController, TeamController],
-  providers: [ProjectService, TeamService, TaskService],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, ProjectModule, TeamModule, TaskModule, StatisticsModule],
+  controllers: [ProjectController, TeamController, StatisticsController],
+  providers: [ProjectService, TeamService, TaskService, StatisticsService],
 })
 export class AppModule {}
