@@ -69,20 +69,25 @@ export class StatisticsService {
     }
 
     async getTaskDoneTrend (organization_id: number) {
-        // const data = await this.prisma.$queryRaw`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM Task WHERE organizationId = ${organization_id} GROUP BY date_part('week', start_date), date_part('year', start_date)`
-        const data = await this.prisma.$queryRaw<Task[]>`SELECT * FROM "Task";`
-        console.log({data})
-        // const projects = await this.prisma.task.groupBy({
-        //     by: ['due_date'],
-        //     where: {
-        //         organizationId: {
-        //             notIn: [Number(organization_id)],
-        //           },
-        //     },
-        //     _count: {
-        //         city: true,
-        //       },
-        // });
+        // const data = await this.prisma.$queryRaw<Task[]>`SELECT * FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id;`
+        // const data = await this.prisma.$queryRaw<Task[]>`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id WHERE "organizationId" = ${Number(organization_id)} GROUP BY date_part('week', due_date), date_part('year', due_date);`
+        const data = await this.prisma.$queryRaw<any[]>`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id WHERE "organizationId" = ${Number(organization_id)} GROUP BY date_part('week', due_date), date_part('year', due_date);`
+        return data.map(i => ({  ...i, no_of_tasks_done: Number(i.no_of_tasks_done) }))
+    }
+
+    async mostDueProjects (organization_id: number) {
+         const projects = await this.prisma.project.findMany({
+            where: {
+                organizationId: Number(organization_id),
+            },
+            orderBy: [
+                {
+                    deadline: 'desc'
+                }
+            ],
+            take: 5
+        });
+        return projects;
     }
 
     async getOverview (organization_id: number) {
@@ -90,12 +95,15 @@ export class StatisticsService {
             const { completedPercentage: completedTasksPercentage, total: totalTasks } = await this.getTasksMetrics(organization_id)
             const { total: totalMembers } = await this.getMembersMetrics(organization_id)
             const percentageOfProjectsByStatus = await this.getProjectStatusChart(organization_id)
-            await this.getTaskDoneTrend(organization_id)
+            const taskTrend = await this.getTaskDoneTrend(organization_id)
+            const mostDueProjects = await this.mostDueProjects(organization_id)
             return {
                 completedTasksPercentage,
                 totalTasks,
                 totalMembers,
                 percentageOfProjectsByStatus,
+                taskTrend,
+                mostDueProjects,
             }
         } catch (error) {
             throw error
