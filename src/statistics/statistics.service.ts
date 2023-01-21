@@ -71,7 +71,7 @@ export class StatisticsService {
     async getTaskDoneTrend (organization_id: number) {
         // const data = await this.prisma.$queryRaw<Task[]>`SELECT * FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id;`
         // const data = await this.prisma.$queryRaw<Task[]>`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id WHERE "organizationId" = ${Number(organization_id)} GROUP BY date_part('week', due_date), date_part('year', due_date);`
-        const data = await this.prisma.$queryRaw<any[]>`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM "Task" RIGHT JOIN "Project" ON "projectId" = "Project".id WHERE "organizationId" = ${Number(organization_id)} GROUP BY date_part('week', due_date), date_part('year', due_date);`
+         const data = await this.prisma.$queryRaw<any[]>`SELECT date_part('week', due_date) AS week, date_part('year', due_date) AS year, COUNT(*) AS no_of_tasks_done FROM "Task" INNER JOIN "Project" ON "projectId" = "Project".id WHERE "organizationId" = ${Number(organization_id)} GROUP BY date_part('week', due_date), date_part('year', due_date);`
         return data.map(i => ({  ...i, no_of_tasks_done: Number(i.no_of_tasks_done) }))
     }
 
@@ -79,6 +79,11 @@ export class StatisticsService {
          const projects = await this.prisma.project.findMany({
             where: {
                 organizationId: Number(organization_id),
+                NOT: [
+                    {
+                        deadline: null
+                    },
+                ],
             },
             orderBy: [
                 {
