@@ -63,7 +63,10 @@ export class StatisticsService {
         })
         let percentageOfProjectsByStatus = {}
         for (const key in totalProjectsByStatus) {
-            percentageOfProjectsByStatus[key] = ((totalProjectsByStatus[key] || 0) / total) * 100
+            percentageOfProjectsByStatus[key] = {
+                value: totalProjectsByStatus[key],
+                percentage: ((totalProjectsByStatus[key] || 0) / total) * 100
+            }
         }
         return percentageOfProjectsByStatus
     }
