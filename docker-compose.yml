@@ -7,3 +7,19 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: pms-api
+    networks:
+      - postgres
+  pms-api:
+    image: pms-api
+    environment:
+      DATABASE_URL: postgresql://postgres:123@dev-db:5432/my-nestjs-app?schema=public
+      JWT_SECRET: super-secret
+    ports:
+      - "3001:3001"
+    depends_on:
+      - dev-db
+    networks:
+      - postgres
+networks:
+  postgres:
+    driver: bridge
