@@ -79,6 +79,9 @@ export class StatisticsService {
          const projects = await this.prisma.project.findMany({
             where: {
                 organizationId: Number(organization_id),
+                status: {
+                    in: ['not_started', 'started', 'delayed']
+                },
                 NOT: [
                     {
                         deadline: null
