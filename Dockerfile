@@ -9,6 +9,9 @@ RUN yarn
 COPY --chown=node:node . .
  
 RUN yarn prisma generate
+
+# RUN yarn prisma migrate dev
+RUN yarn prisma migrate dev
  
 RUN yarn build
  
